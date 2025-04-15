@@ -1,33 +1,34 @@
 using System;
 using UnityEngine;
 
-public class WeaponPlayer : BulletPoolPlayer
+public class WeaponPlayer : ObjectPool<BulletPlayer>
 {
+    [SerializeField] private BulletPlayer _bulletPlayer;
     [SerializeField] private Transform _transform;
-    private ShotHandler _shotHandler;
+
+    private float _shootDelay = 1f;
+    private float _timeSinceLastShot;
     public event Action Hit;
 
-    private void Awake()
+    private void Update()
     {
-        _shotHandler = GetComponent<ShotHandler>();
-    }
+        _timeSinceLastShot += Time.deltaTime;
 
-    private void OnEnable()
-    {
-        _shotHandler.Shoot += Shoot;
-    }
+        if (Input.GetKeyDown(KeyCode.F) && _timeSinceLastShot >= _shootDelay)
+        {
+            Shoot();
 
-    private void OnDisable()
-    {
-        _shotHandler.Shoot -= Shoot;
+            _timeSinceLastShot = 0f;
+        }
     }
 
     public void Shoot()
     {
-        BulletPlayer bulletPlayer = OnGet();
+        BulletPlayer bulletPlayer = GetObject(_bulletPlayer);
         bulletPlayer.gameObject.SetActive(true);
+        bulletPlayer.Remover += Remove;
         bulletPlayer.transform.position = _transform.position;
-        StartCoroutine(bulletPlayer.MoveBullet(_transform.right));
+        bulletPlayer.Direction = _transform.right;
         bulletPlayer.Hit += KillEnemy;
     }
 
@@ -36,4 +37,11 @@ public class WeaponPlayer : BulletPoolPlayer
         Hit.Invoke();
         bulletPlayer.Hit -= KillEnemy;
     }
+
+    public void Remove(BulletPlayer bulletPlayer)
+    {
+        PutObject(bulletPlayer);
+        bulletPlayer.Remover -= Remove;
+    }
+
 }

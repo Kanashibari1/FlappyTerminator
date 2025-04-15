@@ -1,6 +1,5 @@
 using System;
-using System.Collections;
-using Unity.Burst.CompilerServices;
+
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -11,24 +10,26 @@ public class BulletPlayer : MonoBehaviour
 
     public event Action<BulletPlayer> Remover;
     public event Action<BulletPlayer> Hit;
+    public Vector2 Direction { get; set; }
 
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    public IEnumerator MoveBullet(Vector2 position)
+    private void FixedUpdate()
     {
-        while (enabled)
-        {
-            _rigidbody2D.velocity = position * _speed;
-            yield return null;
-        }
+        Move();
+    }
+
+    public void Move()
+    {
+        _rigidbody2D.velocity = Direction * _speed;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.TryGetComponent(out Enemy enemy))
+        if (collision.TryGetComponent(out Enemy enemy))
         {
             enemy.Remove();
             Hit.Invoke(this);

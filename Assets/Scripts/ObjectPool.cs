@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectPool<T> where T : MonoBehaviour
+public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
     private const int _capacity = 5;
 
-    [SerializeField] private Transform _position;
     [SerializeField] private T _prefab;
 
     private Queue<T> _pool = new();
 
-    public ObjectPool(T prefab)
-    {
-        for (int i = 0; i < _capacity; i++)
-        {
-            Create(prefab);
-        }
-    }
+    //public ObjectPool(T prefab)
+    //{
+    //    for (int i = 0; i < _capacity; i++)
+    //    {
+    //        Create(prefab);
+    //    }
+    //}
 
     private T Create(T obj)
     {

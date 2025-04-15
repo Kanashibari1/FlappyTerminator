@@ -1,10 +1,31 @@
 using UnityEngine;
 using System.Collections;
 
-public class WeaponEnemy : BulletPoolEnemy
+public class WeaponEnemy : ObjectPool<BulletEnemy>
 {
-    private Vector3 _position = new(-1, 0, 0);
+    [SerializeField] private BulletEnemy _bulletEnemy;
+    [SerializeField] private Transform _position;
+
     private int _delay;
+
+    private Coroutine _coroutine;
+
+    private void OnEnable()
+    {
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(Shoot());
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(Shoot());
+            _coroutine = null;
+        }
+    }
 
     public IEnumerator Shoot()
     {
@@ -12,12 +33,19 @@ public class WeaponEnemy : BulletPoolEnemy
 
         while (enabled)
         {
-            _delay = Random.Range(3, 5);
-            BulletEnemy bulletEnemy = OnGet();
+            _delay = Random.Range(1, 2);
+            BulletEnemy bulletEnemy = GetObject(_bulletEnemy);
+            bulletEnemy.Remover += Remove;
             bulletEnemy.gameObject.SetActive(true);
-            bulletEnemy.transform.position = transform.position + _position;
+            bulletEnemy.transform.position = _position.position;
 
             yield return _waitForSeconds = new(_delay);
         }
+    }
+
+    public void Remove(BulletEnemy bulletEnemy)
+    {
+        PutObject(bulletEnemy);
+        bulletEnemy.Remover -= Remove;
     }
 }

@@ -1,17 +1,11 @@
 using System.Collections;
 using UnityEngine;
 
-public class SpawnerEnemy : MonoBehaviour
+public class SpawnerEnemy : ObjectPool<Enemy>
 {
     [SerializeField] private Enemy _enemy;
 
-    private ObjectPool<Enemy> _pool;
     private float _delay = 3;
-
-    private void Awake()
-    {
-        _pool = new(_enemy);
-    }
 
     private void Start()
     {
@@ -31,7 +25,7 @@ public class SpawnerEnemy : MonoBehaviour
 
     private void Spawn()
     {
-        Enemy enemy = _pool.GetObject(_enemy);
+        Enemy enemy = GetObject(_enemy);
 
         enemy.Remover += Remove;
         enemy.gameObject.SetActive(true);
@@ -40,7 +34,7 @@ public class SpawnerEnemy : MonoBehaviour
 
     public void Remove(Enemy enemy)
     {
-        _pool.PutObject(enemy);
+        PutObject(enemy);
         enemy.Remover -= Remove;
     }
 }
