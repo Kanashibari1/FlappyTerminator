@@ -3,6 +3,7 @@ using System;
 public class EndScreen : Window
 {
     public event Action RestartButtonClicked;
+
     public override void Close()
     {
         WindowGroup.alpha = 0f;

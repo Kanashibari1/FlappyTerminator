@@ -6,9 +6,19 @@ public class Game : MonoBehaviour
     [SerializeField] private SpawnerEnemy _spawnerEnemy;
     [SerializeField] private StartScreen _startScreen;
     [SerializeField] private EndScreen _endScreen;
+    [SerializeField] private WeaponEnemy _weaponEnemy;
+    [SerializeField] private WeaponPlayer _weaponPlayer;
+
+    private ScoreCounter _scoreCounter;
+
+    private void Awake()
+    {
+        _scoreCounter = GetComponent<ScoreCounter>();
+    }
 
     private void OnEnable()
     {
+        _weaponPlayer.HitEnemy += Add;
         _startScreen.PlayButtonClicked += OnPlayButtonClick;
         _endScreen.RestartButtonClicked += OnRestartButtonClick;
         _bird.GameOver += OnGameOver;
@@ -16,6 +26,7 @@ public class Game : MonoBehaviour
 
     private void OnDisable()
     {
+        _weaponPlayer.HitEnemy -= Add;
         _startScreen.PlayButtonClicked -= OnPlayButtonClick;
         _endScreen.RestartButtonClicked -= OnRestartButtonClick;
         _bird.GameOver -= OnGameOver;
@@ -25,6 +36,7 @@ public class Game : MonoBehaviour
     {
         Time.timeScale = 0f;
         _startScreen.Open();
+        _endScreen.Close();
     }
 
     private void OnGameOver()
@@ -49,5 +61,11 @@ public class Game : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         _bird.Reset();
+        _spawnerEnemy.Reset();
+    }
+
+    private void Add()
+    {
+        _scoreCounter.Add();
     }
 }

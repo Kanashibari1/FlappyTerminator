@@ -8,7 +8,8 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
 
     private float _shootDelay = 1f;
     private float _timeSinceLastShot;
-    public event Action Hit;
+
+    public event Action HitEnemy;
 
     private void Update()
     {
@@ -22,26 +23,26 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
         }
     }
 
-    public void Shoot()
+    private void Shoot()
     {
         BulletPlayer bulletPlayer = GetObject(_bulletPlayer);
         bulletPlayer.gameObject.SetActive(true);
         bulletPlayer.Remover += Remove;
+        bulletPlayer.Hit += KillEnemy;
         bulletPlayer.transform.position = _transform.position;
         bulletPlayer.Direction = _transform.right;
-        bulletPlayer.Hit += KillEnemy;
+    }
+
+    private void Remove(BulletPlayer bulletPlayer)
+    {
+        bulletPlayer.Remover -= Remove;
+        bulletPlayer.Hit -= KillEnemy;
+        PutObject(bulletPlayer);
     }
 
     public void KillEnemy(BulletPlayer bulletPlayer)
     {
-        Hit.Invoke();
+        HitEnemy.Invoke();
         bulletPlayer.Hit -= KillEnemy;
     }
-
-    public void Remove(BulletPlayer bulletPlayer)
-    {
-        PutObject(bulletPlayer);
-        bulletPlayer.Remover -= Remove;
-    }
-
 }

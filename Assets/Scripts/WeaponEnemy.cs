@@ -6,7 +6,7 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     [SerializeField] private BulletEnemy _bulletEnemy;
     [SerializeField] private Transform _position;
 
-    private int _delay;
+    private int _delay = 2;
 
     private Coroutine _coroutine;
 
@@ -27,13 +27,12 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
         }
     }
 
-    public IEnumerator Shoot()
+    private IEnumerator Shoot()
     {
         WaitForSeconds _waitForSeconds;
 
         while (enabled)
         {
-            _delay = Random.Range(1, 2);
             BulletEnemy bulletEnemy = GetObject(_bulletEnemy);
             bulletEnemy.Remover += Remove;
             bulletEnemy.gameObject.SetActive(true);

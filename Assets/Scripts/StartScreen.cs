@@ -3,6 +3,7 @@ using System;
 public class StartScreen : Window
 {
     public event Action PlayButtonClicked;
+
     public override void Close()
     {
         WindowGroup.alpha = 0f;

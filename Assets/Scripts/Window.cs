@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,10 +16,11 @@ public abstract class Window : MonoBehaviour
 
     private void OnDisable()
     {
-        _button?.onClick.RemoveListener(OnButtonClick);
+        _button.onClick.RemoveListener(OnButtonClick);
     }
 
     public abstract void Open();
+
     public abstract void Close();
 
     protected abstract void OnButtonClick();

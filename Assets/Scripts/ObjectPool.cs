@@ -3,25 +3,19 @@ using UnityEngine;
 
 public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
-    private const int _capacity = 5;
-
     [SerializeField] private T _prefab;
 
     private Queue<T> _pool = new();
+    private List<T> _activeObjects = new();
 
-    //public ObjectPool(T prefab)
-    //{
-    //    for (int i = 0; i < _capacity; i++)
-    //    {
-    //        Create(prefab);
-    //    }
-    //}
+    public IEnumerable<T> ActiveObjects => _activeObjects;
 
     private T Create(T obj)
     {
         T @object = GameObject.Instantiate(obj);
 
         @object.gameObject.SetActive(false);
+        _activeObjects.Add(@object);
         _pool.Enqueue(@object);
         return @object;
     }
@@ -38,7 +32,7 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
     public void PutObject(T @object)
     {
-        _pool.Enqueue(@object);
         @object.gameObject.SetActive(false);
+        _pool.Enqueue(@object);
     }
 }

@@ -1,5 +1,4 @@
 using System;
-
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -10,6 +9,7 @@ public class BulletPlayer : MonoBehaviour
 
     public event Action<BulletPlayer> Remover;
     public event Action<BulletPlayer> Hit;
+
     public Vector2 Direction { get; set; }
 
     private void Awake()
@@ -22,7 +22,7 @@ public class BulletPlayer : MonoBehaviour
         Move();
     }
 
-    public void Move()
+    private void Move()
     {
         _rigidbody2D.velocity = Direction * _speed;
     }

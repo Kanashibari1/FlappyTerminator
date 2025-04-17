@@ -6,10 +6,23 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     [SerializeField] private Enemy _enemy;
 
     private float _delay = 3;
+    private Coroutine _coroutine;
 
-    private void Start()
+    private void StartCoroutine()
     {
-        StartCoroutine(GenerateEnemy());
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(GenerateEnemy());
+        }
+    }
+
+    private void StopCoroutine()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(GenerateEnemy());
+            _coroutine = null;
+        }
     }
 
     private IEnumerator GenerateEnemy()
@@ -36,5 +49,17 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     {
         PutObject(enemy);
         enemy.Remover -= Remove;
+    }
+
+    public void Reset()
+    {
+        StopCoroutine();
+
+        foreach (var item in ActiveObjects)
+        {
+            PutObject(item);
+        }
+
+        StartCoroutine();
     }
 }
