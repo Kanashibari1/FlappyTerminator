@@ -5,7 +5,7 @@ public class SpawnerEnemy : ObjectPool<Enemy>
 {
     [SerializeField] private Enemy _enemy;
 
-    private float _delay = 3;
+    private float _delay = 1;
     private Coroutine _coroutine;
 
     private void StartCoroutine()
@@ -20,7 +20,7 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     {
         if (_coroutine != null)
         {
-            StopCoroutine(GenerateEnemy());
+            StopCoroutine(_coroutine);
             _coroutine = null;
         }
     }
@@ -31,8 +31,8 @@ public class SpawnerEnemy : ObjectPool<Enemy>
 
         while (enabled)
         {
-            Spawn();
             yield return wait;
+            Spawn();
         }
     }
 
@@ -43,10 +43,12 @@ public class SpawnerEnemy : ObjectPool<Enemy>
         enemy.Remover += Remove;
         enemy.gameObject.SetActive(true);
         enemy.transform.position = transform.position;
+        enemy.StartShot();
     }
 
     public void Remove(Enemy enemy)
     {
+        enemy.StopShot();
         PutObject(enemy);
         enemy.Remover -= Remove;
     }
@@ -54,12 +56,7 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     public void Reset()
     {
         StopCoroutine();
-
-        foreach (var item in ActiveObjects)
-        {
-            PutObject(item);
-        }
-
+        Restart();
         StartCoroutine();
     }
 }

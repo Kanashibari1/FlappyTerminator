@@ -8,23 +8,14 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
 
     private int _delay = 2;
 
-    private Coroutine _coroutine;
-
-    private void OnEnable()
+    public void StartCoroutine()
     {
-        if (_coroutine == null)
-        {
-            _coroutine = StartCoroutine(Shoot());
-        }
+        StartCoroutine(Shoot());
     }
 
-    private void OnDisable()
+    public void StopCoroutine()
     {
-        if (_coroutine != null)
-        {
-            StopCoroutine(Shoot());
-            _coroutine = null;
-        }
+        StopCoroutine(Shoot());
     }
 
     private IEnumerator Shoot()
@@ -46,5 +37,11 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     {
         PutObject(bulletEnemy);
         bulletEnemy.Remover -= Remove;
+    }
+
+    public void Reset()
+    {
+        StopCoroutine();
+        Restart();
     }
 }

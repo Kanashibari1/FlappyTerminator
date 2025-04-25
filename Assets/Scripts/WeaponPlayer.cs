@@ -45,4 +45,9 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
         HitEnemy.Invoke();
         bulletPlayer.Hit -= KillEnemy;
     }
+
+    public void Reset()
+    {
+        Restart();
+    }
 }

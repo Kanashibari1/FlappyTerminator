@@ -3,8 +3,14 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public event Action<Enemy> Remover;
+    private WeaponEnemy _weaponEnemy;
     private int _speed = 3;
+    public event Action<Enemy> Remover;
+
+    private void Awake()
+    {
+        _weaponEnemy = GetComponent<WeaponEnemy>();
+    }
 
     private void Update()
     {
@@ -14,5 +20,15 @@ public class Enemy : MonoBehaviour
     public void Remove()
     {
         Remover?.Invoke(this);
+    }
+
+    public void StopShot()
+    {
+        _weaponEnemy.StopCoroutine();
+    }
+
+    public void StartShot()
+    {
+        _weaponEnemy.StartCoroutine();
     }
 }

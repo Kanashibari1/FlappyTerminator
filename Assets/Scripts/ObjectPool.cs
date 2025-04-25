@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
-    [SerializeField] private T _prefab;
-
     private Queue<T> _pool = new();
     private List<T> _activeObjects = new();
 
@@ -34,5 +32,13 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
     {
         @object.gameObject.SetActive(false);
         _pool.Enqueue(@object);
+    }
+
+    public void Restart()
+    {
+        foreach(T obj in _activeObjects)
+        {
+            PutObject(obj);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class BulletEnemy : MonoBehaviour
         _rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         _rigidbody2D.velocity = new Vector2(-5,0);
     }
