@@ -7,7 +7,6 @@ public class Game : MonoBehaviour
     [SerializeField] private StartScreen _startScreen;
     [SerializeField] private EndScreen _endScreen;
     [SerializeField] private WeaponPlayer _weaponPlayer;
-    [SerializeField] private WeaponEnemy _weaponEnemy;
 
     private ScoreCounter _scoreCounter;
 
@@ -61,7 +60,6 @@ public class Game : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         _bird.Reset();
-        _weaponEnemy.Reset();
         _spawnerEnemy.Reset();
         _scoreCounter.Reset();
         _weaponPlayer.Reset();

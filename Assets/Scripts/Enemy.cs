@@ -22,13 +22,18 @@ public class Enemy : MonoBehaviour
         Remover?.Invoke(this);
     }
 
+    public void StartShot()
+    {
+        _weaponEnemy.StartCoroutine();
+    }
+
     public void StopShot()
     {
         _weaponEnemy.StopCoroutine();
     }
 
-    public void StartShot()
+    public void Restart()
     {
-        _weaponEnemy.StartCoroutine();
+        _weaponEnemy.Reset();
     }
 }

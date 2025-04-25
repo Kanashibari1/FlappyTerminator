@@ -5,7 +5,7 @@ public class SpawnerEnemy : ObjectPool<Enemy>
 {
     [SerializeField] private Enemy _enemy;
 
-    private float _delay = 1;
+    private float _delay = 3;
     private Coroutine _coroutine;
 
     private void StartCoroutine()
@@ -56,7 +56,13 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     public void Reset()
     {
         StopCoroutine();
-        Restart();
+
+        foreach (Enemy enemy in ActiveObjects)
+        {
+            enemy.Restart();
+            PutObject(enemy);
+        }
+
         StartCoroutine();
     }
 }

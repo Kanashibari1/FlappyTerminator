@@ -6,16 +6,24 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     [SerializeField] private BulletEnemy _bulletEnemy;
     [SerializeField] private Transform _position;
 
-    private int _delay = 2;
+    private int _delay = 1;
+    private Coroutine _coroutine;
 
     public void StartCoroutine()
     {
-        StartCoroutine(Shoot());
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(Shoot());
+        }
     }
 
     public void StopCoroutine()
     {
-        StopCoroutine(Shoot());
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
     }
 
     private IEnumerator Shoot()
