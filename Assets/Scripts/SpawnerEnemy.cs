@@ -57,12 +57,12 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     {
         StopCoroutine();
 
-        foreach (Enemy enemy in ActiveObjects)
+        foreach (Enemy enemy in AllObjects)
         {
             enemy.Restart();
-            PutObject(enemy);
         }
 
+        Restart();
         StartCoroutine();
     }
 }

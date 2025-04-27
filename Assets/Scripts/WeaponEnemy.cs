@@ -41,7 +41,7 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
         }
     }
 
-    public void Remove(BulletEnemy bulletEnemy)
+    private void Remove(BulletEnemy bulletEnemy)
     {
         PutObject(bulletEnemy);
         bulletEnemy.Remover -= Remove;

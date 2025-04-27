@@ -4,28 +4,30 @@ using UnityEngine;
 public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 {
     private Queue<T> _pool = new();
-    private List<T> _activeObjects = new();
+    private List<T> _allObjects = new();
 
-    public IEnumerable<T> ActiveObjects => _activeObjects;
+    public IEnumerable<T> AllObjects => _allObjects;
 
     private T Create(T obj)
     {
         T @object = GameObject.Instantiate(obj);
 
         @object.gameObject.SetActive(false);
-        _activeObjects.Add(@object);
+        _allObjects.Add(@object);
         _pool.Enqueue(@object);
         return @object;
     }
 
     public T GetObject(T @object)
     {
-        if(_pool.Count == 0)
+        if (_pool.Count == 0)
         {
             Create(@object);
         }
 
-        return _pool.Dequeue();
+        T obj = _pool.Dequeue();
+
+        return obj;
     }
 
     public void PutObject(T @object)
@@ -36,9 +38,12 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
     public void Restart()
     {
-        foreach(T obj in _activeObjects)
+        foreach (T obj in _allObjects)
         {
-            PutObject(obj);
+            if (obj.gameObject.activeSelf)
+            {
+                PutObject(obj);
+            }
         }
     }
 }
