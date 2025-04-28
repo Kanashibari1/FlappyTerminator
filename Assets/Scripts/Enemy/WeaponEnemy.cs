@@ -9,23 +9,6 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     private int _delay = 1;
     private Coroutine _coroutine;
 
-    public void StartCoroutine()
-    {
-        if (_coroutine == null)
-        {
-            _coroutine = StartCoroutine(Shoot());
-        }
-    }
-
-    public void StopCoroutine()
-    {
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = null;
-        }
-    }
-
     private IEnumerator Shoot()
     {
         WaitForSeconds _waitForSeconds;
@@ -47,9 +30,34 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
         bulletEnemy.Remover -= Remove;
     }
 
+    public void StartCoroutine()
+    {
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(Shoot());
+        }
+    }
+
+    public void StopCoroutine()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+    }
+
     public void Reset()
     {
         StopCoroutine();
-        Restart();
+
+        foreach(var bullet in AllObjects)
+        {
+            if (bullet.gameObject.activeSelf)
+            {
+                bullet.Remover -= Remove;
+                PutObject(bullet);
+            }
+        }
     }
 }

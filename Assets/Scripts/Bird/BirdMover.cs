@@ -22,7 +22,6 @@ public class BirdMover : MonoBehaviour
     private void Start()
     {
         _startPosition = transform.position;
-
         _maxRotation = Quaternion.Euler(0,0,_maxRotationZ);
         _minRorarion = Quaternion.Euler(0, 0, _minRotationZ);
     }

@@ -32,7 +32,7 @@ public class BulletPlayer : MonoBehaviour
         if (collision.TryGetComponent(out Enemy enemy))
         {
             enemy.Remove();
-            Hit.Invoke(this);
+            Hit?.Invoke(this);
             Remover?.Invoke(this);
         }
 
