@@ -9,6 +9,37 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     private int _delay = 1;
     private Coroutine _coroutine;
 
+    public void Reset()
+    {
+        StopAttack();
+
+        foreach(var bullet in AllObjects)
+        {
+            if (bullet.gameObject.activeSelf)
+            {
+                bullet.Removed -= Remove;
+                PutObject(bullet);
+            }
+        }
+    }
+
+    public void Attack()
+    {
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(Shoot());
+        }
+    }
+
+    public void StopAttack()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+    }
+
     private IEnumerator Shoot()
     {
         WaitForSeconds _waitForSeconds;
@@ -16,7 +47,7 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
         while (enabled)
         {
             BulletEnemy bulletEnemy = GetObject(_bulletEnemy);
-            bulletEnemy.Remover += Remove;
+            bulletEnemy.Removed += Remove;
             bulletEnemy.gameObject.SetActive(true);
             bulletEnemy.transform.position = _position.position;
 
@@ -27,37 +58,6 @@ public class WeaponEnemy : ObjectPool<BulletEnemy>
     private void Remove(BulletEnemy bulletEnemy)
     {
         PutObject(bulletEnemy);
-        bulletEnemy.Remover -= Remove;
-    }
-
-    public void StartCoroutine()
-    {
-        if (_coroutine == null)
-        {
-            _coroutine = StartCoroutine(Shoot());
-        }
-    }
-
-    public void StopCoroutine()
-    {
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = null;
-        }
-    }
-
-    public void Reset()
-    {
-        StopCoroutine();
-
-        foreach(var bullet in AllObjects)
-        {
-            if (bullet.gameObject.activeSelf)
-            {
-                bullet.Remover -= Remove;
-                PutObject(bullet);
-            }
-        }
+        bulletEnemy.Removed -= Remove;
     }
 }

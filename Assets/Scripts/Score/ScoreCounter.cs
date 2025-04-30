@@ -3,19 +3,19 @@ using UnityEngine;
 
 public class ScoreCounter : MonoBehaviour
 {
-    private int _score;
+    private int _value;
 
-    public event Action<int> ScoreChanged;
+    public event Action<int> ValueChanged;
 
     public void Add()
     {
-        _score++;
-        ScoreChanged?.Invoke(_score);
+        _value++;
+        ValueChanged?.Invoke(_value);
     }
 
     public void Reset()
     {
-        _score = 0;
-        ScoreChanged?.Invoke(_score);
+        _value = 0;
+        ValueChanged?.Invoke(_value);
     }
 }

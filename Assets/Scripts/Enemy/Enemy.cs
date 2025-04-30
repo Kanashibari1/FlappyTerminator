@@ -1,12 +1,13 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(WeaponEnemy))]
 public class Enemy : MonoBehaviour
 {
     private WeaponEnemy _weaponEnemy;
     private int _speed = 3;
 
-    public event Action<Enemy> Remover;
+    public event Action<Enemy> Removed;
 
     private void Awake()
     {
@@ -20,17 +21,17 @@ public class Enemy : MonoBehaviour
 
     public void Remove()
     {
-        Remover?.Invoke(this);
+        Removed?.Invoke(this);
     }
 
     public void StartShot()
     {
-        _weaponEnemy.StartCoroutine();
+        _weaponEnemy.Attack();
     }
 
     public void StopShot()
     {
-        _weaponEnemy.StopCoroutine();
+        _weaponEnemy.StopAttack();
     }
 
     public void Restart()

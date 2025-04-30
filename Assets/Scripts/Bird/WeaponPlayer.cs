@@ -1,53 +1,56 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(InputReader))]
 public class WeaponPlayer : ObjectPool<BulletPlayer>
 {
     [SerializeField] private BulletPlayer _bulletPlayer;
     [SerializeField] private Transform _transform;
 
-    private float _shootDelay = 1f;
-    private float _timeSinceLastShot;
+    private InputReader _inputReader;
 
-    public event Action HitEnemy;
+    public event Action Hit;
 
-    private void Update()
+    private void Awake()
     {
-        _timeSinceLastShot += Time.deltaTime;
+        _inputReader = GetComponent<InputReader>();
+    }
 
-        if (Input.GetKeyDown(KeyCode.F) && _timeSinceLastShot >= _shootDelay)
-        {
-            Shoot();
+    private void OnEnable()
+    {
+        _inputReader.UsingShot += Shoot;
+    }
 
-            _timeSinceLastShot = 0f;
-        }
+    private void OnDisable()
+    {
+        _inputReader.UsingShot -= Shoot;
+    }
+
+    public void Reset()
+    {
+        Restart();
+    }
+
+    public void KillEnemy(BulletPlayer bulletPlayer)
+    {
+        Hit.Invoke();
+        bulletPlayer.Hitting -= KillEnemy;
     }
 
     private void Shoot()
     {
         BulletPlayer bulletPlayer = GetObject(_bulletPlayer);
         bulletPlayer.gameObject.SetActive(true);
-        bulletPlayer.Remover += Remove;
-        bulletPlayer.Hit += KillEnemy;
+        bulletPlayer.Removed += Remove;
+        bulletPlayer.Hitting += KillEnemy;
         bulletPlayer.transform.position = _transform.position;
-        bulletPlayer.Direction = _transform.right;
+        bulletPlayer.Direction(_transform.right);
     }
 
     private void Remove(BulletPlayer bulletPlayer)
     {
-        bulletPlayer.Remover -= Remove;
-        bulletPlayer.Hit -= KillEnemy;
+        bulletPlayer.Removed -= Remove;
+        bulletPlayer.Hitting -= KillEnemy;
         PutObject(bulletPlayer);
-    }
-
-    public void KillEnemy(BulletPlayer bulletPlayer)
-    {
-        HitEnemy.Invoke();
-        bulletPlayer.Hit -= KillEnemy;
-    }
-
-    public void Reset()
-    {
-        Restart();
     }
 }

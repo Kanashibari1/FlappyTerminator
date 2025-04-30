@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 
+[RequireComponent(typeof(BirdMover))]
+[RequireComponent(typeof(CollisionHandler))]
 public class Bird : MonoBehaviour
 {
     private CollisionHandler _birdCollisionHandler;
@@ -24,12 +26,9 @@ public class Bird : MonoBehaviour
         _birdCollisionHandler.CollisionDetected -= ProcessCollision;
     }
 
-    private void ProcessCollision(IInteractable interactable)
+    public void Reset()
     {
-        if(interactable is Platform)
-        {
-            Die();
-        }
+        _birdMover.Reset();
     }
 
     public void Die()
@@ -37,8 +36,11 @@ public class Bird : MonoBehaviour
         GameOver?.Invoke();
     }
 
-    public void Reset()
+    private void ProcessCollision(IInteractable interactable)
     {
-        _birdMover.Reset();
+        if(interactable is Platform)
+        {
+            Die();
+        }
     }
 }

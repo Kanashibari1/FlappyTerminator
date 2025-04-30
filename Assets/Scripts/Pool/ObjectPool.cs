@@ -8,16 +8,6 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
 
     public IEnumerable<T> AllObjects => _allObjects;
 
-    private T Create(T obj)
-    {
-        T @object = GameObject.Instantiate(obj);
-
-        @object.gameObject.SetActive(false);
-        _allObjects.Add(@object);
-        _pool.Enqueue(@object);
-        return @object;
-    }
-
     public T GetObject(T @object)
     {
         if (_pool.Count == 0)
@@ -45,5 +35,15 @@ public class ObjectPool<T> : MonoBehaviour where T : MonoBehaviour
                 PutObject(obj);
             }
         }
+    }
+
+    private T Create(T obj)
+    {
+        T @object = GameObject.Instantiate(obj);
+
+        @object.gameObject.SetActive(false);
+        _allObjects.Add(@object);
+        _pool.Enqueue(@object);
+        return @object;
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof (Rigidbody2D))]
+[RequireComponent(typeof (InputReader))]
 public class BirdMover : MonoBehaviour
 {
     private int _force = 10;
@@ -12,11 +13,22 @@ public class BirdMover : MonoBehaviour
     private Rigidbody2D _rigidbody2d;
     private Quaternion _maxRotation;
     private Quaternion _minRorarion;
+    private InputReader _inputReader;
     
-
     private void Awake()
     {
+        _inputReader = GetComponent<InputReader>();
         _rigidbody2d = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnEnable()
+    {
+        _inputReader.UsingJump += Jump;
+    }
+
+    private void OnDisable()
+    {
+        _inputReader.UsingJump -= Jump;
     }
 
     private void Start()
@@ -28,12 +40,6 @@ public class BirdMover : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            _rigidbody2d.velocity = new Vector2(0, _force);
-            transform.rotation = _maxRotation;
-        }
-
         transform.rotation = Quaternion.Lerp(transform.rotation, _minRorarion, _rotationSpeed * Time.deltaTime);
     }
 
@@ -42,5 +48,11 @@ public class BirdMover : MonoBehaviour
         transform.position = _startPosition;
         transform.rotation = Quaternion.identity;
         _rigidbody2d.velocity = Vector2.zero;
+    }
+
+    private void Jump()
+    {
+        _rigidbody2d.velocity = new Vector2(0, _force);
+        transform.rotation = _maxRotation;
     }
 }

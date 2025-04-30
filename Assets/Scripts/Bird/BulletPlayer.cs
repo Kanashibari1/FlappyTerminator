@@ -4,13 +4,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BulletPlayer : MonoBehaviour
 {
-    private Rigidbody2D _rigidbody2D;
     private float _speed = 5f;
 
-    public event Action<BulletPlayer> Remover;
-    public event Action<BulletPlayer> Hit;
+    private Rigidbody2D _rigidbody2D;
+    private Vector2 _direction;
 
-    public Vector2 Direction { get; set; }
+    public event Action<BulletPlayer> Removed;
+    public event Action<BulletPlayer> Hitting;
 
     private void Awake()
     {
@@ -22,23 +22,27 @@ public class BulletPlayer : MonoBehaviour
         Move();
     }
 
-    private void Move()
-    {
-        _rigidbody2D.velocity = Direction * _speed;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Enemy enemy))
         {
             enemy.Remove();
-            Hit?.Invoke(this);
-            Remover?.Invoke(this);
+            Hitting?.Invoke(this);
+            Removed?.Invoke(this);
         }
-
         else if (collision.TryGetComponent(out Platform platform))
         {
-            Remover?.Invoke(this);
+            Removed?.Invoke(this);
         }
+    }
+
+    public void Direction(Vector2 direction)
+    {
+        _direction = direction;
+    }
+
+    private void Move()
+    {
+        _rigidbody2D.velocity = _direction * _speed;
     }
 }

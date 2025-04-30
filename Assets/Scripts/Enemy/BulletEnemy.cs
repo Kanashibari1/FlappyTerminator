@@ -6,7 +6,7 @@ public class BulletEnemy : MonoBehaviour
 {
     private Rigidbody2D _rigidbody2D;
 
-    public event Action<BulletEnemy> Remover;
+    public event Action<BulletEnemy> Removed;
 
     private void Awake()
     {
@@ -26,7 +26,7 @@ public class BulletEnemy : MonoBehaviour
         }
         else if (collision.TryGetComponent(out Platform platform))
         {
-            Remover?.Invoke(this);
+            Removed?.Invoke(this);
         }
     }
 }

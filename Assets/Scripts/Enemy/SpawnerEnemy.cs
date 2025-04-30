@@ -10,7 +10,21 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     private float _loverLimit = -16;
     private float _upperLimit = 0;
 
-    private void StartCoroutine()
+    public void Reset()
+    {
+        StopSpawning();
+
+        foreach (Enemy enemy in AllObjects)
+        {
+            enemy.Restart();
+            enemy.Removed -= Remove;
+        }
+
+        Restart();
+        StartSpawning();
+    }
+
+    private void StartSpawning()
     {
         if (_coroutine == null)
         {
@@ -18,7 +32,7 @@ public class SpawnerEnemy : ObjectPool<Enemy>
         }
     }
 
-    private void StopCoroutine()
+    private void StopSpawning()
     {
         if (_coroutine != null)
         {
@@ -42,9 +56,8 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     {
         float spawnY = Random.Range(_loverLimit, _upperLimit);
         Vector3 spawn = new(transform.position.x, spawnY, transform.position.z);
-
         Enemy enemy = GetObject(_enemy);
-        enemy.Remover += Remove;
+        enemy.Removed += Remove;
         enemy.gameObject.SetActive(true);
         enemy.transform.position = spawn;
         enemy.StartShot();
@@ -54,20 +67,6 @@ public class SpawnerEnemy : ObjectPool<Enemy>
     {
         enemy.StopShot();
         PutObject(enemy);
-        enemy.Remover -= Remove;
-    }
-
-    public void Reset()
-    {
-        StopCoroutine();
-
-        foreach (Enemy enemy in AllObjects)
-        {
-            enemy.Restart();
-            enemy.Remover -= Remove;
-        }
-
-        Restart();
-        StartCoroutine();
+        enemy.Removed -= Remove;
     }
 }

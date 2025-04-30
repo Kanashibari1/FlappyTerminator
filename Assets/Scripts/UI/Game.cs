@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[RequireComponent(typeof(ScoreCounter))]
 public class Game : MonoBehaviour
 {
     [SerializeField] private Bird _bird;
@@ -17,7 +18,7 @@ public class Game : MonoBehaviour
 
     private void OnEnable()
     {
-        _weaponPlayer.HitEnemy += Add;
+        _weaponPlayer.Hit += Add;
         _startScreen.PlayButtonClicked += OnPlayButtonClick;
         _endScreen.RestartButtonClicked += OnRestartButtonClick;
         _bird.GameOver += OnGameOver;
@@ -25,7 +26,7 @@ public class Game : MonoBehaviour
 
     private void OnDisable()
     {
-        _weaponPlayer.HitEnemy -= Add;
+        _weaponPlayer.Hit -= Add;
         _startScreen.PlayButtonClicked -= OnPlayButtonClick;
         _endScreen.RestartButtonClicked -= OnRestartButtonClick;
         _bird.GameOver -= OnGameOver;
