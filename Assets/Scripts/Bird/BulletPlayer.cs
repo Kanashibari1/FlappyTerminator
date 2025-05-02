@@ -4,7 +4,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class BulletPlayer : MonoBehaviour
 {
-    private float _speed = 5f;
+    private float _speed = 10f;
 
     private Rigidbody2D _rigidbody2D;
     private Vector2 _direction;
@@ -36,7 +36,7 @@ public class BulletPlayer : MonoBehaviour
         }
     }
 
-    public void Direction(Vector2 direction)
+    public void SetDirection(Vector2 direction)
     {
         _direction = direction;
     }

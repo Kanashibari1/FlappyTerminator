@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(InputReader))]
@@ -8,26 +9,38 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
     [SerializeField] private Transform _transform;
 
     private InputReader _inputReader;
+    private Coroutine _coroutine;
+    private WaitForSeconds _waitForSeconds;
+    private float _secondSleep = 2f;
+    private bool _isShot = true;
 
     public event Action Hit;
 
     private void Awake()
     {
+        _waitForSeconds = new(_secondSleep);
         _inputReader = GetComponent<InputReader>();
     }
 
     private void OnEnable()
     {
-        _inputReader.UsingShot += Shoot;
+        _inputReader.UseShotted += Shot;
     }
 
     private void OnDisable()
     {
-        _inputReader.UsingShot -= Shoot;
+        _inputReader.UseShotted -= Shot;
     }
 
     public void Reset()
     {
+        if(_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+
+        _isShot = true;
         Restart();
     }
 
@@ -37,14 +50,18 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
         bulletPlayer.Hitting -= KillEnemy;
     }
 
-    private void Shoot()
+    private void Shot()
     {
-        BulletPlayer bulletPlayer = GetObject(_bulletPlayer);
-        bulletPlayer.gameObject.SetActive(true);
-        bulletPlayer.Removed += Remove;
-        bulletPlayer.Hitting += KillEnemy;
-        bulletPlayer.transform.position = _transform.position;
-        bulletPlayer.Direction(_transform.right);
+        if (_isShot)
+        {
+            BulletPlayer bulletPlayer = GetObject(_bulletPlayer);
+            bulletPlayer.gameObject.SetActive(true);
+            bulletPlayer.Removed += Remove;
+            bulletPlayer.Hitting += KillEnemy;
+            bulletPlayer.transform.position = _transform.position;
+            bulletPlayer.SetDirection(_transform.right);
+            Recharge();
+        }
     }
 
     private void Remove(BulletPlayer bulletPlayer)
@@ -52,5 +69,27 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
         bulletPlayer.Removed -= Remove;
         bulletPlayer.Hitting -= KillEnemy;
         PutObject(bulletPlayer);
+    }
+
+    private IEnumerator Whit()
+    {
+        yield return _waitForSeconds;
+        _isShot = true;
+        StopCoroutine(_coroutine);
+        _coroutine = null;
+    }
+
+    private void Recharge()
+    {
+        _isShot = false;
+
+        if(_coroutine == null)
+        {
+            _coroutine = StartCoroutine(Whit());
+        }
+        else if(_coroutine != null)
+        {
+            return;
+        }
     }
 }

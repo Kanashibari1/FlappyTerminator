@@ -3,25 +3,22 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    private float _shootDelay = 1f;
-    private float _timeSinceLastShot;
+    private KeyCode _keySpace = KeyCode.Space;
+    private KeyCode _keyF = KeyCode.F;
 
-    public event Action UsingJump;
-    public event Action UsingShot;
+    public event Action UseJumped;
+    public event Action UseShotted;
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(_keySpace))
         {
-            UsingJump.Invoke();
+            UseJumped.Invoke();
         }
 
-        _timeSinceLastShot += Time.deltaTime;
-
-        if (Input.GetKeyDown(KeyCode.F) && _timeSinceLastShot >= _shootDelay)
+        if (Input.GetKeyDown(_keyF))
         {
-            UsingShot.Invoke();
-            _timeSinceLastShot = 0f;
+            UseShotted.Invoke();
         }
     }
 }

@@ -8,16 +8,16 @@ public class ScoreView : MonoBehaviour
 
     private void OnEnable()
     {
-        _scoreCounter.ValueChanged += OnScoreChanged;
+        _scoreCounter.ValueChanged += OnValueChanged;
     }
 
     private void OnDisable()
     {
-        _scoreCounter.ValueChanged -= OnScoreChanged;
+        _scoreCounter.ValueChanged -= OnValueChanged;
     }
 
-    private void OnScoreChanged(int score)
+    private void OnValueChanged(int value)
     {
-        _textMeshPro.text = score.ToString();
+        _textMeshPro.text = value.ToString();
     }
 }
