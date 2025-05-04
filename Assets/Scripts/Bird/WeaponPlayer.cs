@@ -24,12 +24,12 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
 
     private void OnEnable()
     {
-        _inputReader.UseShotted += Shot;
+        _inputReader.Shotted += Shot;
     }
 
     private void OnDisable()
     {
-        _inputReader.UseShotted -= Shot;
+        _inputReader.Shotted -= Shot;
     }
 
     public void Reset()
@@ -86,10 +86,6 @@ public class WeaponPlayer : ObjectPool<BulletPlayer>
         if(_coroutine == null)
         {
             _coroutine = StartCoroutine(Whit());
-        }
-        else if(_coroutine != null)
-        {
-            return;
         }
     }
 }

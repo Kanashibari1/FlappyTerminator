@@ -23,12 +23,12 @@ public class BirdMover : MonoBehaviour
 
     private void OnEnable()
     {
-        _inputReader.UseJumped += Jump;
+        _inputReader.Jumped += Jump;
     }
 
     private void OnDisable()
     {
-        _inputReader.UseJumped -= Jump;
+        _inputReader.Jumped -= Jump;
     }
 
     private void Start()

@@ -3,22 +3,22 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    private KeyCode _keySpace = KeyCode.Space;
-    private KeyCode _keyF = KeyCode.F;
+    private KeyCode _jump = KeyCode.Space;
+    private KeyCode _shot = KeyCode.F;
 
-    public event Action UseJumped;
-    public event Action UseShotted;
+    public event Action Jumped;
+    public event Action Shotted;
 
     private void Update()
     {
-        if (Input.GetKeyDown(_keySpace))
+        if (Input.GetKeyDown(_jump))
         {
-            UseJumped.Invoke();
+            Jumped.Invoke();
         }
 
-        if (Input.GetKeyDown(_keyF))
+        if (Input.GetKeyDown(_shot))
         {
-            UseShotted.Invoke();
+            Shotted.Invoke();
         }
     }
 }
